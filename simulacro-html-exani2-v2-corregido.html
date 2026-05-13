@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Simulacro EXANI-II Versión 2 — Asesorías Académicas Izamal</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},
+  options:{skipHtmlTags:['script','noscript','style','textarea']},
+  startup:{typeset:false}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"
+        crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pm:#1a5276;--cl:#1e8449;--ri:#7d6608;
+  --bg:#f0f4f8;--card:#fff;--txt:#1c2833;--sub:#566573;
+  --rad:14px;--shadow:0 4px 18px rgba(0,0,0,.10);
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);
+  color:var(--txt);min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;padding:14px 12px;}
+
+.logo-bar{width:100%;max-width:740px;display:flex;align-items:center;gap:13px;
+  background:#fff;border-radius:var(--rad);box-shadow:var(--shadow);
+  padding:11px 18px;margin-bottom:16px;}
+.logo-icon{width:52px;height:52px;flex-shrink:0;border-radius:10px;
+  background:linear-gradient(135deg,#1a5276,#1e8449);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#fff;font-size:8.5px;font-weight:700;text-align:center;line-height:1.45;letter-spacing:.2px}
+.logo-text h1{font-size:.97rem;font-weight:700}
+.logo-text p{font-size:.73rem;color:var(--sub)}
+
+.card{width:100%;max-width:740px;background:var(--card);
+  border-radius:var(--rad);box-shadow:var(--shadow);padding:26px 22px;}
+
+#screen-home h2{font-size:1.3rem;text-align:center;margin-bottom:5px}
+.home-sub{text-align:center;color:var(--sub);margin-bottom:22px;font-size:.88rem;line-height:1.6}
+.area-cards{display:flex;flex-direction:column;gap:11px}
+.area-btn{border:none;border-radius:10px;padding:15px 18px;cursor:pointer;
+  color:#fff;font-size:.93rem;font-weight:600;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:opacity .2s,transform .1s}
+.area-btn:hover{opacity:.88}
+.area-btn:active{transform:scale(.98)}
+.area-btn .badge{background:rgba(255,255,255,.25);border-radius:20px;
+  padding:3px 10px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.area-btn.pm{background:var(--pm)}.area-btn.cl{background:var(--cl)}.area-btn.ri{background:var(--ri)}
+.area-btn.done{opacity:.4;cursor:default}
+.btn-final{display:none;margin-top:16px;width:100%;padding:13px;border-radius:10px;
+  border:none;background:#2e4057;color:#fff;font-size:.97rem;font-weight:700;cursor:pointer}
+.btn-final.show{display:block}
+.btn-final:hover{opacity:.88}
+
+#screen-exam{padding:0}
+.exam-header{padding:18px 22px 0;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;margin-bottom:14px}
+.area-pill{font-size:.8rem;font-weight:700;color:#fff;
+  padding:5px 14px;border-radius:20px;line-height:1.3;text-align:center;max-width:55%}
+.timer-box{font-size:1.08rem;font-weight:800;padding:5px 15px;border-radius:20px;
+  background:#f0f4f8;color:var(--txt);min-width:72px;text-align:center;
+  transition:background .3s,color .3s;flex-shrink:0}
+.timer-box.warn{background:#fdebd0;color:#d35400}
+.timer-box.danger{background:#f9ebea;color:#c0392b;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+.progress-wrap{margin:0 22px 4px;height:5px;background:#dde3ea;border-radius:3px;overflow:hidden}
+.progress-bar{height:5px;border-radius:3px;transition:width .35s}
+
+.nav-section{padding:10px 22px 14px;border-bottom:1px solid #eef0f3}
+.nav-label{font-size:.73rem;color:var(--sub);margin-bottom:7px;font-weight:600;letter-spacing:.3px}
+.nav-grid{display:flex;flex-wrap:wrap;gap:6px}
+.nav-btn{width:34px;height:34px;border-radius:8px;border:2px solid #dde3ea;
+  background:#fff;font-size:.82rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;color:var(--txt);flex-shrink:0}
+.nav-btn:hover{border-color:#aab4c4;background:#f7f9fb}
+.nav-btn.answered{background:#2e86c1;border-color:#2e86c1;color:#fff}
+.nav-btn.wrong-nav{background:#e74c3c;border-color:#e74c3c;color:#fff}
+.nav-btn.current{border-width:3px;transform:scale(1.12)}
+.nav-btn.current:not(.answered):not(.wrong-nav){border-color:var(--area-col)}
+
+.exam-body{padding:16px 22px 22px}
+
+.texto-base-toggle{display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;margin-bottom:14px;
+  padding:10px 14px;background:#eafaf1;border-radius:8px;border:1px solid #a9dfbf}
+.texto-base-toggle span{font-size:.85rem;font-weight:700;color:#1e8449}
+.texto-base-toggle .chevron{font-size:.8rem;color:#1e8449;transition:transform .2s}
+.texto-base-toggle.open .chevron{transform:rotate(180deg)}
+.texto-contenido{display:none}
+.texto-contenido.open{display:block}
+
+.q-num{font-size:.77rem;color:var(--sub);margin-bottom:8px;font-weight:600}
+.q-text{font-size:.98rem;line-height:1.7;margin-bottom:20px}
+.q-figura{margin:14px 0;text-align:center;background:#fafafa;
+  padding:14px;border-radius:8px;border:1px solid #e5e8eb}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt-btn{border:2px solid #dde3ea;border-radius:10px;background:#fff;
+  padding:12px 15px;text-align:left;cursor:pointer;font-size:.93rem;line-height:1.5;
+  transition:border-color .18s,background .18s;
+  display:flex;align-items:flex-start;gap:10px;width:100%}
+.opt-btn:hover:not(:disabled){border-color:#aab4c4;background:#f7f9fb}
+.opt-letter{min-width:26px;height:26px;border-radius:50%;background:#eef0f3;
+  font-weight:700;font-size:.82rem;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px}
+.opt-btn.selected{border-color:#5d8fcc;background:#ebf2fb}
+.opt-btn.selected .opt-letter{background:#5d8fcc;color:#fff}
+.opt-btn.correct{border-color:#27ae60;background:#eafaf1}
+.opt-btn.correct .opt-letter{background:#27ae60;color:#fff}
+.opt-btn.wrong{border-color:#e74c3c;background:#fdf0ef}
+.opt-btn.wrong .opt-letter{background:#e74c3c;color:#fff}
+.opt-btn:disabled{cursor:default}
+
+.explanation{display:none;margin-top:16px;background:#f4f6f7;
+  border-left:4px solid #27ae60;padding:11px 15px;
+  border-radius:0 8px 8px 0;font-size:.86rem;line-height:1.65;color:#2c3e50}
+.explanation.show{display:block}
+.explanation.fail{border-left-color:#e74c3c}
+
+.exam-footer{padding:0 22px 20px;display:flex;gap:9px;align-items:center;margin-top:16px}
+.btn-nav{flex:1;padding:11px 6px;border-radius:10px;border:2px solid #dde3ea;
+  background:#fff;font-size:.88rem;font-weight:700;cursor:pointer;color:var(--txt);
+  transition:all .18s}
+.btn-nav:hover{border-color:#aab4c4;background:#f7f9fb}
+.btn-nav:disabled{opacity:.35;cursor:default}
+.btn-entregar{padding:11px 18px;border-radius:10px;border:none;
+  font-size:.88rem;font-weight:700;cursor:pointer;color:#fff;
+  background:#e74c3c;transition:opacity .18s;white-space:nowrap}
+.btn-entregar:hover{opacity:.88}
+
+#screen-timeout{text-align:center}
+#screen-timeout h2{font-size:1.4rem;margin-bottom:10px;color:#c0392b}
+#screen-timeout p{color:var(--sub);margin-bottom:22px;line-height:1.6}
+
+#screen-results h2{text-align:center;font-size:1.3rem;margin-bottom:18px}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:22px}
+.score-card{border-radius:10px;padding:13px 8px;text-align:center;color:#fff}
+.sc-label{font-size:.7rem;font-weight:700;opacity:.85;margin-bottom:3px}
+.sc-val{font-size:1.45rem;font-weight:800}
+.sc-sub{font-size:.7rem;opacity:.8}
+.chart-wrap{margin-bottom:22px}
+.chart-wrap h3{font-size:.9rem;margin-bottom:11px;font-weight:700}
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.bar-label{width:36px;font-size:.78rem;font-weight:700;flex-shrink:0}
+.bar-track{flex:1;height:22px;background:#eef0f3;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;
+  padding-left:7px;color:#fff;font-size:.75rem;font-weight:700;transition:width .7s ease}
+.bar-pct{width:38px;font-size:.8rem;font-weight:700;text-align:right;flex-shrink:0}
+.review-section h3{font-size:.9rem;margin-bottom:12px;font-weight:700}
+.rev-area-hdr{font-size:.86rem;font-weight:700;margin:14px 0 8px;
+  padding-bottom:4px;border-bottom:2px solid currentColor}
+.rev-item{border:1px solid #dde3ea;border-radius:10px;padding:13px 15px;margin-bottom:9px}
+.rev-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.rev-badge{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px}
+.rev-badge.ok{background:#d5f5e3;color:#1e8449}
+.rev-badge.fail{background:#fce4e4;color:#c0392b}
+.rev-badge.skip{background:#f0f0f0;color:#888}
+.rev-num{font-size:.72rem;color:#aaa}
+.rev-q{font-size:.86rem;line-height:1.55;margin-bottom:5px}
+.rev-ans{font-size:.8rem;color:var(--sub)}
+.rev-exp{font-size:.8rem;color:#2c3e50;margin-top:6px;border-top:1px solid #eee;padding-top:5px;line-height:1.55}
+.btn-home{width:100%;padding:12px;border-radius:10px;border:none;
+  background:#2e4057;color:#fff;font-size:.97rem;font-weight:700;cursor:pointer;margin-top:16px}
+.btn-home:hover{opacity:.88}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:none;align-items:center;justify-content:center;z-index:999;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:26px 22px;max-width:360px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal h3{font-size:1.1rem;margin-bottom:10px}
+.modal p{font-size:.88rem;color:var(--sub);margin-bottom:20px;line-height:1.6}
+.modal-btns{display:flex;gap:10px}
+.modal-btns button{flex:1;padding:11px;border-radius:9px;border:none;
+  font-size:.9rem;font-weight:700;cursor:pointer}
+.btn-cancel{background:#eef0f3;color:var(--txt)}
+.btn-confirm{background:#e74c3c;color:#fff}
+.btn-cancel:hover{background:#dde3ea}
+.btn-confirm:hover{opacity:.88}
+
+@media(max-width:480px){
+  body{padding:10px 7px}
+  .card{padding:18px 13px}
+  .exam-header,.exam-body,.exam-footer,.nav-section,.progress-wrap{
+    padding-left:14px;padding-right:14px}
+  .score-grid{gap:7px}
+  .sc-val{font-size:1.2rem}
+  .nav-btn{width:31px;height:31px;font-size:.78rem}
+}
+</style>
+</head>
+<body>
+
+<div class="logo-bar">
+  <div class="logo-icon">ASESORÍAS<br>ACADÉMICAS<br>IZAMAL</div>
+  <div class="logo-text">
+    <h1>Asesorías Académicas Izamal</h1>
+    <p>Simulacro EXANI-II &nbsp;·&nbsp; Versión 2 · 45 reactivos · 60 min</p>
+  </div>
+</div>
+
+<div class="card" id="screen-home">
+  <h2>Simulacro de práctica — Versión 2</h2>
+  <p class="home-sub">Selecciona un área para comenzar. Cada área tiene 20 minutos. Puedes navegar entre preguntas y regresar antes de entregar.</p>
+  <div class="area-cards">
+    <button class="area-btn pm" id="btn-PM" onclick="startArea('PM')">
+      <span>📐&nbsp; Pensamiento Matemático</span>
+      <span class="badge">15 preguntas · 20 min</span>
+    </button>
+    <button class="area-btn ri" id="btn-RI" onclick="startArea('RI')">
+      <span>✍️&nbsp; Redacción Indirecta</span>
+      <span class="badge">15 preguntas · 20 min</span>
+    </button>
+    <button class="area-btn cl" id="btn-CL" onclick="startArea('CL')">
+      <span>📖&nbsp; Comprensión Lectora</span>
+      <span class="badge">15 preguntas · 20 min</span>
+    </button>
+  </div>
+  <button class="btn-final" id="btn-go-results" onclick="showResults()">
+    📊&nbsp; Ver resultados finales
+  </button>
+</div>
+
+<div class="card" id="screen-exam" style="display:none;padding:0">
+
+  <div class="exam-header">
+    <div class="area-pill" id="exam-label">Área</div>
+    <div class="timer-box" id="timer-box">20:00</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">PREGUNTAS — Azul: contestada · Gris: pendiente</div>
+    <div class="nav-grid" id="nav-grid"></div>
+  </div>
+
+  <div class="exam-body">
+    <div id="texto-toggle-wrap" style="display:none">
+      <div class="texto-base-toggle" id="texto-toggle" onclick="toggleTexto()">
+        <span>📄 Ver texto de lectura</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="texto-contenido" id="texto-contenido"></div>
+    </div>
+
+    <div class="q-num" id="q-num">Pregunta 1 de 15</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-figura" id="q-figura" style="display:none"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <div class="exam-footer">
+    <button class="btn-nav" id="btn-prev" onclick="goTo(STATE.qIdx-1)">← Anterior</button>
+    <button class="btn-nav" id="btn-next-nav" onclick="goTo(STATE.qIdx+1)">Siguiente →</button>
+    <button class="btn-entregar" id="btn-entregar" style="display:none" onclick="pedirConfirmar()">Entregar</button>
+  </div>
+</div>
+
+<div class="card" id="screen-timeout" style="display:none">
+  <h2>⏰ Tiempo agotado</h2>
+  <p id="timeout-msg">Se agotó el tiempo.<br>Las preguntas sin responder se marcaron como incorrectas.</p>
+  <button class="btn-home" onclick="afterTimeout()">Ver resultados →</button>
+</div>
+
+<div class="card" id="screen-results" style="display:none">
+  <h2>📊 Resultados del simulacro</h2>
+  <div class="score-grid" id="score-grid"></div>
+  <div class="chart-wrap"><h3>Desempeño por área</h3><div id="chart"></div></div>
+  <div class="review-section"><h3>Revisión de respuestas</h3><div id="review-list"></div></div>
+  <button class="btn-home" onclick="goHome()">🏠 Volver al inicio</button>
+</div>
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>¿Entregar esta área?</h3>
+    <p id="modal-msg">Tienes preguntas sin responder. Puedes regresar a contestarlas o entregar ahora.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-confirm" onclick="confirmarEntrega()">Entregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// PENSAMIENTO MATEMÁTICO — 15 reactivos
+// ============================================================
+const REACTIVOS_PM = [
+{
+  q: "Una blusa cuesta $480 y tiene un descuento del 22%. Si además al pagar en efectivo aplican un 5% adicional sobre el precio ya rebajado, ¿cuánto pagará el cliente?",
+  opt_a: "$355.68",
+  opt_b: "$374.40",
+  opt_c: "$362.50",
+  answer: "a",
+  exp: "Primer descuento: $480 \\times 0.78 = 374.40$. Descuento adicional del 5%: $374.40 \\times 0.95 = 355.68$. El cliente paga <strong>$355.68</strong>."
+},
+{
+  q: "Si $5(x - 3) + 2x = 4x + 6$, ¿cuál es el valor de $x$?",
+  opt_a: "$x = 3$",
+  opt_b: "$x = 7$",
+  opt_c: "$x = 5$",
+  answer: "b",
+  exp: "Desarrollando: $5x - 15 + 2x = 4x + 6 \\Rightarrow 7x - 15 = 4x + 6 \\Rightarrow 3x = 21 \\Rightarrow x = 7$."
+},
+{
+  q: "Asocia cada expresión con su forma desarrollada:<br>1. $(2x+5)^2$ &nbsp;&nbsp; 2. $(2x-5)^2$ &nbsp;&nbsp; 3. $(2x+5)(2x-5)$<br>a) $4x^2 - 25$ &nbsp;&nbsp; b) $4x^2 + 20x + 25$ &nbsp;&nbsp; c) $4x^2 - 20x + 25$",
+  opt_a: "1a, 2b, 3c",
+  opt_b: "1c, 2a, 3b",
+  opt_c: "1b, 2c, 3a",
+  answer: "c",
+  exp: "Productos notables: $(2x+5)^2 = 4x^2 + 20x + 25$ (b); $(2x-5)^2 = 4x^2 - 20x + 25$ (c); $(2x+5)(2x-5) = 4x^2 - 25$ (a). Asociación: <strong>1b, 2c, 3a</strong>."
+},
+{
+  q: "Resuelve el sistema: $\\begin{cases} 3x + 2y = 16 \\\\ x - y = 2 \\end{cases}$. Los valores de $x$ y $y$ son:",
+  opt_a: "$x = 5,\\ y = 3$",
+  opt_b: "$x = 3,\\ y = 1$",
+  opt_c: "$x = 4,\\ y = 2$",
+  answer: "c",
+  exp: "De la segunda: $x = y + 2$. Sustituyendo: $3(y+2) + 2y = 16 \\Rightarrow 5y = 10 \\Rightarrow y = 2$. Entonces $x = 4$."
+},
+{
+  q: "Simplifica: $\\dfrac{a^5 \\cdot a^{-2}}{a^{-3}}$",
+  opt_a: "$a^0 = 1$",
+  opt_b: "$a^4$",
+  opt_c: "$a^6$",
+  answer: "c",
+  exp: "$\\frac{a^{5-2}}{a^{-3}} = \\frac{a^3}{a^{-3}} = a^{3-(-3)} = a^6$. Regla: $\\frac{x^a}{x^b} = x^{a-b}$."
+},
+{
+  q: "Calcula el área sombreada: cuadrado de lado 10 cm con un círculo inscrito que toca los cuatro lados.",
+  opt_a: "$100 - 100\\pi$ cm²",
+  opt_b: "$100 - 25\\pi$ cm²",
+  opt_c: "$50 - 25\\pi$ cm²",
+  answer: "b",
+  figura: "circuloInscrito",
+  exp: "Área del cuadrado: $10^2 = 100$ cm². El círculo inscrito tiene radio 5, área $= \\pi(5)^2 = 25\\pi$. Área sombreada $= 100 - 25\\pi$ cm²."
+},
+{
+  q: "La gráfica muestra una recta que pasa por los puntos $(0, 2)$ y $(3, 8)$. ¿Cuál es la ecuación de la recta?",
+  opt_a: "$y = x + 2$",
+  opt_b: "$y = 2x + 3$",
+  opt_c: "$y = 2x + 2$",
+  answer: "c",
+  figura: "rectaLineal",
+  exp: "Pendiente: $m = \\frac{8-2}{3-0} = 2$. Ordenada al origen: $b = 2$ (intercepto en $y$). Ecuación: <strong>$y = 2x + 2$</strong>."
+},
+{
+  q: "Una compañía cobra por sus servicios según la ecuación $y = 45x + 150$, donde $x$ es el número de horas e $y$ el costo en pesos. ¿Qué representa el valor 150?",
+  opt_a: "El costo por cada hora trabajada",
+  opt_b: "La tarifa total por trabajar 3 horas",
+  opt_c: "Un cargo fijo que se cobra sin importar las horas",
+  answer: "c",
+  exp: "En $y = mx + b$, el valor $b$ es la ordenada al origen, que en este contexto representa un cargo fijo independiente de las horas trabajadas."
+},
+{
+  q: "Dada la función $f(x) = x^2 - 7x + 12$, ¿cuáles son sus raíces?",
+  opt_a: "$x = 3$ y $x = 4$",
+  opt_b: "$x = -3$ y $x = -4$",
+  opt_c: "$x = 2$ y $x = 6$",
+  answer: "a",
+  exp: "Factorizando: $x^2 - 7x + 12 = (x-3)(x-4) = 0$. Las raíces son $x = 3$ y $x = 4$."
+},
+{
+  q: "El histograma muestra las edades de los empleados de una empresa. ¿Cuál es la clase con mayor frecuencia?<br><br>[20-25] = 8 &nbsp;·&nbsp; [26-30] = 15 &nbsp;·&nbsp; [31-35] = 12 &nbsp;·&nbsp; [36-40] = 5",
+  opt_a: "[20-25]",
+  opt_b: "[31-35]",
+  opt_c: "[26-30]",
+  answer: "c",
+  figura: "histograma",
+  exp: "La clase <strong>[26-30]</strong> tiene la mayor frecuencia con 15 empleados, por lo que es la clase modal."
+},
+{
+  q: "En una urna hay 5 canicas rojas, 4 azules y 3 verdes. Si se extrae una al azar, ¿cuál es la probabilidad de que NO sea verde?",
+  opt_a: "$\\dfrac{1}{4}$",
+  opt_b: "$\\dfrac{1}{2}$",
+  opt_c: "$\\dfrac{3}{4}$",
+  answer: "c",
+  exp: "Total: 12 canicas. No verdes: $5 + 4 = 9$. Probabilidad: $\\frac{9}{12} = \\frac{3}{4}$."
+},
+{
+  q: "Se lanzan dos dados de seis caras. ¿Cuál es la probabilidad de que la suma sea exactamente 7?",
+  opt_a: "$\\dfrac{1}{12}$",
+  opt_b: "$\\dfrac{5}{36}$",
+  opt_c: "$\\dfrac{1}{6}$",
+  answer: "c",
+  exp: "Casos favorables (suma 7): (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) = 6 casos. Total: 36. Probabilidad: $\\frac{6}{36} = \\frac{1}{6}$."
+},
+{
+  q: "En un triángulo rectángulo, el cateto opuesto al ángulo $\\theta$ mide 9 cm y el cateto adyacente mide 12 cm. ¿Cuál es el valor de $\\sin\\theta$?",
+  opt_a: "$0.75$",
+  opt_b: "$0.60$",
+  opt_c: "$0.80$",
+  answer: "b",
+  exp: "Primero, hipotenusa: $\\sqrt{9^2 + 12^2} = \\sqrt{225} = 15$. $\\sin\\theta = \\frac{\\text{opuesto}}{\\text{hipotenusa}} = \\frac{9}{15} = 0.60$."
+},
+{
+  q: "Si 6 obreros tardan 15 días en construir un muro, ¿cuántos días tardarán 9 obreros en construir el mismo muro al mismo ritmo?",
+  opt_a: "10 días",
+  opt_b: "22.5 días",
+  opt_c: "12 días",
+  answer: "a",
+  exp: "Proporcionalidad inversa: $6 \\times 15 = 9 \\times d \\Rightarrow d = \\frac{90}{9} = 10$ días."
+},
+{
+  q: "La gráfica muestra el costo (en pesos) por kilómetro recorrido de tres servicios de transporte. ¿Cuál es más conveniente para distancias largas?<br><br>Servicio A: pendiente alta, tarifa inicial baja.<br>Servicio B: pendiente baja, tarifa inicial alta.<br>Servicio C: pendiente y tarifa intermedias.",
+  opt_a: "Servicio A",
+  opt_b: "Servicio C",
+  opt_c: "Servicio B",
+  answer: "c",
+  figura: "tresRectas",
+  exp: "Para distancias largas, lo determinante es la <strong>pendiente</strong> (costo por km), no la tarifa inicial. El servicio B tiene la menor pendiente, así que es el más económico a largo plazo."
+}
+];
+
+// ============================================================
+// REDACCIÓN INDIRECTA — 15 reactivos
+// (palabras y oraciones SIN tildes en las opciones cuando se pregunta por acentuación)
+// ============================================================
+const REACTIVOS_RI = [
+{
+  q: "¿Cuál de las siguientes oraciones está acentuada <strong>correctamente</strong>?",
+  opt_a: "El camion llego tarde a la estacion porque habia mucho trafico.",
+  opt_b: "El camión llegó tarde a la estación porque había mucho tráfico.",
+  opt_c: "El camión llego tarde a la estacion porque había mucho trafico.",
+  answer: "b",
+  exp: "<strong>Camión</strong> y <strong>estación</strong>: agudas terminadas en n, llevan tilde. <strong>Llegó</strong>: aguda terminada en vocal, lleva tilde. <strong>Había</strong>: hiato í-a, lleva tilde. <strong>Tráfico</strong>: esdrújula, lleva tilde. La opción B aplica todas las reglas."
+},
+{
+  q: "¿En cuál opción todas las palabras llevan correctamente el uso de la tilde diacrítica?",
+  opt_a: "Si tu quieres, te presto el libro a ti.",
+  opt_b: "Sí, tú quieres, te presto el libro a tí.",
+  opt_c: "Sí, tú quieres, te presto el libro a ti.",
+  answer: "c",
+  exp: "<strong>Sí</strong> (afirmación) y <strong>tú</strong> (pronombre personal) llevan tilde diacrítica. <strong>Ti</strong> NUNCA lleva tilde porque no tiene homófono que la requiera. <strong>Te</strong> (pronombre) tampoco lleva tilde aquí porque no es el sustantivo 'té' (bebida)."
+},
+{
+  q: "Identifica la palabra <strong>mal escrita</strong>:",
+  opt_a: "excepción",
+  opt_b: "esuberante",
+  opt_c: "excentricidad",
+  answer: "b",
+  exp: "Lo correcto es <strong>exuberante</strong> (con x). 'Esuberante' es un error ortográfico común. 'Excepción' y 'excentricidad' están bien escritas."
+},
+{
+  q: "Selecciona la oración puntuada <strong>correctamente</strong>:",
+  opt_a: "Mi tía que vive en Mérida vendrá el lunes próximo.",
+  opt_b: "Mi tía, que vive en Mérida vendrá el lunes, próximo.",
+  opt_c: "Mi tía, que vive en Mérida, vendrá el lunes próximo.",
+  answer: "c",
+  exp: "Las comas encierran la oración explicativa 'que vive en Mérida' (incidental que aporta información adicional sobre 'mi tía'). En la opción A faltan las comas; en la B están mal ubicadas."
+},
+{
+  q: "Selecciona la oración que usa correctamente el <strong>punto y coma</strong>:",
+  opt_a: "Estudié toda la noche, sin embargo; no aprobé el examen.",
+  opt_b: "Estudié toda la noche sin embargo; no aprobé el examen.",
+  opt_c: "Estudié toda la noche; sin embargo, no aprobé el examen.",
+  answer: "c",
+  exp: "Antes de conectores adversativos como 'sin embargo', 'no obstante' o 'por tanto' que unen oraciones complejas, va punto y coma; y después del conector, coma. La opción C aplica correctamente esta regla."
+},
+{
+  q: "¿En cuál oración hay <strong>concordancia</strong> correcta entre sujeto y verbo?",
+  opt_a: "Hubieron muchas personas en la conferencia ayer.",
+  opt_b: "Habemos varios interesados en el proyecto.",
+  opt_c: "Hubo muchas personas en la conferencia ayer.",
+  answer: "c",
+  exp: "El verbo <strong>haber</strong> como impersonal SIEMPRE va en singular: 'hubo', 'había', 'habrá'. Las formas 'hubieron' y 'habemos' son errores frecuentes en el español coloquial mexicano, pero gramaticalmente incorrectas."
+},
+{
+  q: "Selecciona la oración con <strong>concordancia nominal</strong> correcta:",
+  opt_a: "Las casa blanco y los automóviles rojos están en venta.",
+  opt_b: "Las casas blanco y los automóviles rojo están en venta.",
+  opt_c: "Las casas blancas y los automóviles rojos están en venta.",
+  answer: "c",
+  exp: "Los adjetivos deben concordar con sus sustantivos en género y número: 'casas blancas' (femenino plural) y 'automóviles rojos' (masculino plural)."
+},
+{
+  q: "Selecciona la oración con uso correcto de pronombres:",
+  opt_a: "La dije a María que la llamaría después.",
+  opt_b: "Le dije a María que la llamaría después.",
+  opt_c: "Le dije a María que le llamaría después.",
+  answer: "b",
+  exp: "<strong>Le</strong> (dativo) corresponde al objeto indirecto: 'dije a María'. <strong>La</strong> (acusativo femenino) corresponde al objeto directo: 'llamar a alguien'. Confundirlos es laísmo o leísmo."
+},
+{
+  q: "Selecciona el <strong>conector</strong> que completa correctamente la oración:<br><br>«Llovió torrencialmente toda la tarde; ______, decidimos cancelar el picnic.»",
+  opt_a: "además",
+  opt_b: "sin embargo",
+  opt_c: "por lo tanto",
+  answer: "c",
+  exp: "El conector debe expresar <strong>causa-consecuencia</strong> (llovió → cancelamos). 'Por lo tanto' es consecuencia. 'Sin embargo' sería contraste (no aplica). 'Además' es adición (tampoco)."
+},
+{
+  q: "Selecciona el <strong>conector adversativo</strong> adecuado:<br><br>«Estudió durante meses con disciplina; ______, no logró el puntaje requerido.»",
+  opt_a: "además",
+  opt_b: "por consiguiente",
+  opt_c: "no obstante",
+  answer: "c",
+  exp: "Se necesita un conector que indique <strong>contraste</strong> (estudió, pero no aprobó). 'No obstante' es adversativo. 'Por consiguiente' sería consecuencia y 'además' sería adición."
+},
+{
+  q: "Complete la oración con las grafías correctas:<br><br>«El a___ogado re___isó el contrato y descu___rió un error grave.»",
+  opt_a: "v, b, v",
+  opt_b: "b, v, v",
+  opt_c: "b, v, b",
+  answer: "c",
+  exp: "<strong>Abogado</strong> (b), <strong>revisó</strong> (v) y <strong>descubrió</strong> (b). Regla: 'abogado' lleva b porque proviene de 'advocatus'; 'revisar' lleva v; 'descubrir' lleva b por la familia léxica de 'cubrir'."
+},
+{
+  q: "Complete la oración con las grafías correctas:<br><br>«La cone___ión entre amba___ ciudade___ se hizo más efica___.»",
+  opt_a: "cc, s, s, s",
+  opt_b: "x, s, z, s",
+  opt_c: "x, s, s, z",
+  answer: "c",
+  exp: "<strong>Conexión</strong> (x), <strong>ambas</strong> (s, plural femenino), <strong>ciudades</strong> (s, plural), <strong>eficaz</strong> (z, terminación característica de adjetivos)."
+},
+{
+  q: "Ordena las siguientes oraciones para formar un párrafo coherente:<br><br>1. Por eso, los expertos recomiendan limitar el tiempo frente a la pantalla antes de dormir.<br>2. El uso excesivo de pantallas puede afectar gravemente la calidad del sueño.<br>3. Esta afectación se debe principalmente a la luz azul que emiten los dispositivos electrónicos.",
+  opt_a: "1, 2, 3",
+  opt_b: "3, 2, 1",
+  opt_c: "2, 3, 1",
+  answer: "c",
+  exp: "Orden lógico de un párrafo expositivo: <strong>planteamiento</strong> del problema (2), <strong>explicación</strong> del fenómeno (3), <strong>conclusión/recomendación</strong> (1). Por lo tanto: 2, 3, 1."
+},
+{
+  q: "¿Cuál es el registro adecuado para redactar un oficio dirigido al director de una institución?",
+  opt_a: "«Hola profe, ¿podría darme una copia del documento, porfa?»",
+  opt_b: "«Necesito esa copia urgente, ¿sí o no?»",
+  opt_c: "«Por medio del presente, le solicito atentamente una copia del documento referido.»",
+  answer: "c",
+  exp: "El registro formal-administrativo se caracteriza por: fórmulas de cortesía ('por medio del presente', 'atentamente'), tercera persona, modo subjuntivo y ausencia total de coloquialismos. Las opciones A y B usan registros informales inadecuados."
+},
+{
+  q: "Asocia cada conector con su tipo:<br>1. «Sin embargo» &nbsp;&nbsp; 2. «Por lo tanto» &nbsp;&nbsp; 3. «Además»<br>a) Adición &nbsp;&nbsp; b) Adversativo &nbsp;&nbsp; c) Consecuencia",
+  opt_a: "1a, 2b, 3c",
+  opt_b: "1c, 2a, 3b",
+  opt_c: "1b, 2c, 3a",
+  answer: "c",
+  exp: "<strong>Sin embargo</strong> = adversativo / contraste (b). <strong>Por lo tanto</strong> = consecuencia (c). <strong>Además</strong> = adición (a). Asociación correcta: <strong>1b, 2c, 3a</strong>."
+}
+];
+
+// ============================================================
+// COMPRENSIÓN LECTORA — 15 reactivos (2 lecturas)
+// ============================================================
+const TEXTO_CL = `<p style="font-size:.85rem;font-weight:700;color:#1e8449;margin-bottom:10px">📖 LECTURA 1 — Responde las preguntas 1 a 8</p>
+<div style="background:#f8fdf9;border-left:4px solid #1e8449;padding:14px 16px;border-radius:0 8px 8px 0;font-size:.87rem;line-height:1.75;color:#2c3e50;margin-bottom:18px">
+<p style="margin-bottom:8px;text-align:center"><strong>Las redes sociales y la salud mental adolescente:<br>una crisis silenciosa</strong></p>
+<p style="margin-bottom:9px">En la última década, las redes sociales han pasado de ser herramientas de entretenimiento ocasional a convertirse en el principal espacio de socialización de los adolescentes. Plataformas como Instagram, TikTok y Snapchat consumen, en promedio, entre cuatro y siete horas diarias de la atención de los jóvenes mexicanos. Esta omnipresencia digital ha generado un debate urgente: ¿estamos frente a una crisis silenciosa de salud mental?</p>
+<p style="margin-bottom:9px">Los datos son alarmantes. Entre 2010 y 2025, las tasas de ansiedad, depresión y autolesión en adolescentes se duplicaron en prácticamente todos los países desarrollados, un fenómeno que coincide con la adopción masiva de los teléfonos inteligentes. Aunque correlación no implica causalidad, las investigaciones han identificado mecanismos plausibles: la comparación social constante, la búsqueda compulsiva de aprobación mediante <em>likes</em>, el ciberacoso y la disrupción del sueño.</p>
+<p style="margin-bottom:9px">No todos los especialistas coinciden con esta visión alarmista. Algunos investigadores señalan que culpar a las redes sociales es una simplificación que ignora factores estructurales más profundos: la precariedad económica, la incertidumbre climática y el debilitamiento de las redes comunitarias tradicionales. Desde esta perspectiva, las plataformas digitales serían más un síntoma que una causa.</p>
+<p>Lo innegable es que las redes sociales no fueron pensadas para el bienestar de sus usuarios, sino para maximizar el tiempo que pasan en ellas. Los algoritmos premian el contenido emocionalmente intenso, frecuentemente el más polarizante o angustiante. La tecnología no es enemiga; el problema radica en cómo, cuánto y para qué la usamos.</p>
+</div>
+<p style="font-size:.85rem;font-weight:700;color:#1e8449;margin-bottom:10px;margin-top:18px">📖 LECTURA 2 — Responde las preguntas 9 a 15</p>
+<div style="background:#f8fdf9;border-left:4px solid #1e8449;padding:14px 16px;border-radius:0 8px 8px 0;font-size:.87rem;line-height:1.75;color:#2c3e50">
+<p style="margin-bottom:8px;text-align:center"><strong>El espejo de la abuela</strong> <em>(cuento)</em></p>
+<p style="margin-bottom:9px">Cuando mi abuela murió, me dejaron el espejo. Era un espejo viejo, con marco de madera oscura tallada. Mis primos se llevaron las joyas, los muebles, los óleos firmados. A mí me tocó el espejo, y lo recibí con la indiferencia de quien hereda lo que nadie quiso.</p>
+<p style="margin-bottom:9px">Una noche de octubre, al pasar frente a él, me detuve. Detrás de mí, en el reflejo, alcancé a ver algo que no estaba en el pasillo: una mecedora vacía que se balanceaba lentamente. Me di la vuelta rápidamente. No había nada.</p>
+<p style="margin-bottom:9px">Al día siguiente, vi a mi abuela en el espejo, sentada en la mecedora, tejiendo. Cuando me atreví a girar, el pasillo seguía vacío. Hablé con mi madre. Me dijo: «Tu abuela siempre decía que ese espejo era especial. Que mostraba lo que uno no quería ver. Lo que uno había dejado pendiente.»</p>
+<p style="margin-bottom:9px">Esa frase me persiguió durante semanas. Yo había querido mucho a mi abuela, pero en sus últimos años había ido menos a visitarla. Siempre tenía trabajo, compromisos. Cuando murió, llevaba meses sin verla.</p>
+<p style="margin-bottom:9px">Una noche me senté frente al espejo y le hablé. Le pedí perdón por las visitas que no hice, por las llamadas que pospuse, por haber creído que el tiempo era infinito. Ella levantó la vista de su tejido, me miró y sonrió con una dulzura que no recordaba haber visto nunca. Después fue desapareciendo, como una neblina que se disuelve con el sol.</p>
+<p>Nunca más la vi en el espejo. Pero ahora sé que los espejos viejos guardan cosas que los nuevos han olvidado: las deudas del corazón, los gestos pendientes, las palabras que nunca dijimos. Y a veces, si tenemos suerte, nos dan una última oportunidad de decirlas.</p>
+</div>`;
+
+const REACTIVOS_CL = [
+// LECTURA 1 (1-8)
+{
+  q: "<em>(Lectura 1)</em> ¿Cuál es la idea principal del texto?",
+  opt_a: "Las redes sociales son enemigas absolutas del bienestar adolescente y deben prohibirse.",
+  opt_b: "El uso de redes sociales es completamente inofensivo si los padres supervisan.",
+  opt_c: "La crisis de salud mental adolescente es compleja y las redes sociales son un factor importante, aunque no único.",
+  answer: "c",
+  exp: "El texto presenta una visión matizada: reconoce el papel de las redes pero también menciona otros factores estructurales (precariedad, comunidad, etc.). No prohibe ni absuelve a las redes."
+},
+{
+  q: "<em>(Lectura 1)</em> Según el texto, ¿cuántas horas diarias dedican los adolescentes mexicanos a las redes sociales en promedio?",
+  opt_a: "Entre 1 y 3 horas",
+  opt_b: "Más de 10 horas",
+  opt_c: "Entre 4 y 7 horas",
+  answer: "c",
+  exp: "El primer párrafo dice textualmente: «consumen, en promedio, entre cuatro y siete horas diarias de la atención de los jóvenes mexicanos»."
+},
+{
+  q: "<em>(Lectura 1)</em> En la expresión «culpar a las redes sociales es una <strong>simplificación</strong>», la palabra destacada significa:",
+  opt_a: "Hacer un problema más fácil de resolver.",
+  opt_b: "Una solución definitiva y exitosa.",
+  opt_c: "Reducción excesiva de un problema complejo a una sola causa.",
+  answer: "c",
+  exp: "En el contexto, 'simplificación' es una crítica del autor: se refiere a reducir el problema a una sola causa (las redes), ignorando otros factores estructurales."
+},
+{
+  q: "<em>(Lectura 1)</em> ¿Cuál de los siguientes enunciados es una <strong>opinión</strong> del autor, no un hecho verificable?",
+  opt_a: "Las tasas de ansiedad y depresión se duplicaron entre 2010 y 2025.",
+  opt_b: "Instagram, TikTok y Snapchat son plataformas usadas por adolescentes.",
+  opt_c: "Los algoritmos premian el contenido emocionalmente intenso y polarizante.",
+  answer: "c",
+  exp: "Las opciones A y B son hechos verificables (datos estadísticos y nombres reales de plataformas). La C es una afirmación valorativa que, aunque tiene base empírica, expresa una postura interpretativa del autor sobre el diseño algorítmico."
+},
+{
+  q: "<em>(Lectura 1)</em> ¿Cuál es el propósito principal del texto?",
+  opt_a: "Convencer al lector de eliminar las redes sociales de su vida.",
+  opt_b: "Narrar la historia personal del autor con las redes sociales.",
+  opt_c: "Reflexionar sobre el impacto de las redes en la salud mental adolescente.",
+  answer: "c",
+  exp: "El texto es argumentativo-reflexivo: presenta datos, contrasta posturas e identifica problemas. No narra ni propone una postura radical de eliminación."
+},
+{
+  q: "<em>(Lectura 1)</em> ¿Qué se puede <strong>inferir</strong> sobre la postura del autor?",
+  opt_a: "Cree que la tecnología es enemiga y debe eliminarse.",
+  opt_b: "Considera que las soluciones legales son ineficaces.",
+  opt_c: "Adopta una postura equilibrada: reconoce problemas y propone reflexión.",
+  answer: "c",
+  exp: "El cierre del texto lo afirma explícitamente: «La tecnología no es enemiga; el problema radica en cómo, cuánto y para qué la usamos.» Es una postura matizada."
+},
+{
+  q: "<em>(Lectura 1)</em> ¿De qué tipo de texto se trata?",
+  opt_a: "Texto narrativo-literario, porque cuenta una historia personal.",
+  opt_b: "Texto instructivo, porque indica pasos para usar redes sociales.",
+  opt_c: "Texto argumentativo-académico, porque presenta tesis con evidencias.",
+  answer: "c",
+  exp: "El texto presenta una tesis (las redes afectan la salud mental), usa evidencias (datos), considera contrapuntos y propone una reflexión final. Es argumentativo-académico."
+},
+{
+  q: "<em>(Lectura 1)</em> Asocia cada elemento con el papel que el texto le asigna:<br>1. Algoritmos &nbsp;&nbsp; 2. Adolescentes &nbsp;&nbsp; 3. Otros factores estructurales<br>a) Vulnerables a comparación y aprobación social &nbsp;&nbsp; b) Premian contenido emocionalmente intenso &nbsp;&nbsp; c) Precariedad, incertidumbre y debilitamiento comunitario",
+  opt_a: "1c, 2b, 3a",
+  opt_b: "1a, 2c, 3b",
+  opt_c: "1b, 2a, 3c",
+  answer: "c",
+  exp: "El texto atribuye: 1) los algoritmos premian contenido emocionalmente intenso (b); 2) los adolescentes son vulnerables (a); 3) los factores estructurales son la precariedad, incertidumbre y debilitamiento comunitario (c). Asociación: <strong>1b, 2a, 3c</strong>."
+},
+// LECTURA 2 (9-15)
+{
+  q: "<em>(Lectura 2)</em> ¿Qué heredó la narradora de su abuela?",
+  opt_a: "Joyas y muebles antiguos.",
+  opt_b: "Una mecedora antigua.",
+  opt_c: "Un espejo viejo con marco de madera tallada.",
+  answer: "c",
+  exp: "El primer párrafo establece que la narradora heredó «el espejo», mientras que los primos se llevaron joyas, muebles y óleos."
+},
+{
+  q: "<em>(Lectura 2)</em> ¿Cómo recibió inicialmente la narradora su herencia?",
+  opt_a: "Con gran emoción y aprecio por el valor sentimental.",
+  opt_b: "Con miedo por presentir algo sobrenatural.",
+  opt_c: "Con indiferencia, «como quien hereda lo que nadie quiso».",
+  answer: "c",
+  exp: "El texto lo dice textualmente: «lo recibí con la indiferencia de quien hereda lo que nadie quiso»."
+},
+{
+  q: "<em>(Lectura 2)</em> ¿De qué tipo de texto se trata?",
+  opt_a: "Texto expositivo-científico.",
+  opt_b: "Texto argumentativo-periodístico.",
+  opt_c: "Texto narrativo-literario (cuento).",
+  answer: "c",
+  exp: "Es un texto narrativo-literario: cuenta una historia con narrador en primera persona, personajes, conflicto y desenlace, con elementos simbólicos. Pertenece al género cuento."
+},
+{
+  q: "<em>(Lectura 2)</em> ¿Cuál es el tema central del cuento?",
+  opt_a: "El miedo a los espejos antiguos.",
+  opt_b: "La importancia de heredar objetos valiosos.",
+  opt_c: "La culpa por no haber visitado a la abuela y la posibilidad de reconciliación.",
+  answer: "c",
+  exp: "Aunque el cuento usa el elemento sobrenatural (el espejo), su tema central es la culpa de la narradora por descuidar a su abuela y la oportunidad de pedir perdón."
+},
+{
+  q: "<em>(Lectura 2)</em> ¿Por qué dejó de aparecer la abuela en el espejo?",
+  opt_a: "Porque la narradora se mudó de casa.",
+  opt_b: "Porque el espejo se rompió.",
+  opt_c: "Porque la narradora le pidió perdón por las visitas y llamadas que pospuso.",
+  answer: "c",
+  exp: "El clímax del cuento es el momento en que la narradora pide perdón; después de esa confesión, la abuela sonríe y desaparece «como una neblina que se disuelve con el sol»."
+},
+{
+  q: "<em>(Lectura 2)</em> Complete la siguiente oración con base en el cuento:<br><br>«Los espejos viejos guardan cosas que los nuevos han ______.»",
+  opt_a: "reflejado",
+  opt_b: "construido",
+  opt_c: "olvidado",
+  answer: "c",
+  exp: "El último párrafo del cuento contiene textualmente: «los espejos viejos guardan cosas que los nuevos han olvidado»."
+},
+{
+  q: "<em>(Lectura 2)</em> La frase «como una neblina que se disuelve con el sol» es un ejemplo de:",
+  opt_a: "Metáfora.",
+  opt_b: "Hipérbole.",
+  opt_c: "Símil o comparación.",
+  answer: "c",
+  exp: "Es un <strong>símil</strong> (o comparación) porque usa la partícula comparativa «como» para comparar la desaparición de la abuela con la disolución de la neblina. La metáfora omitiría 'como'."
+}
+];
+
+// ============================================================
+// SVGs de figuras para Pensamiento Matemático
+// ============================================================
+const FIGURAS = {
+  circuloInscrito: `<svg width="180" height="180" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="p1" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#888" stroke-width="1.5"/>
+      </pattern>
+    </defs>
+    <rect x="20" y="20" width="160" height="160" fill="url(#p1)" stroke="#333" stroke-width="2"/>
+    <circle cx="100" cy="100" r="80" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="100" y="195" text-anchor="middle" font-size="11" font-family="Arial">10 cm</text>
+    <text x="8" y="105" text-anchor="middle" font-size="11" font-family="Arial" transform="rotate(-90 8 105)">10 cm</text>
+  </svg>`,
+
+  rectaLineal: `<svg width="260" height="220" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+    <line x1="20" y1="200" x2="270" y2="200" stroke="#999" stroke-width="1"/>
+    <line x1="40" y1="20" x2="40" y2="220" stroke="#999" stroke-width="1"/>
+    <line x1="20" y1="200" x2="270" y2="200" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="40" y1="220" x2="40" y2="20" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+    <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+    <text x="265" y="195" font-size="10">x</text>
+    <text x="48" y="25" font-size="10">y</text>
+    <!-- Recta y=2x+2: pasa por (0,2)=(40,180) y (3,8)=(160,60) -->
+    <line x1="40" y1="180" x2="200" y2="20" stroke="#1a5276" stroke-width="2.5"/>
+    <!-- Puntos -->
+    <circle cx="40" cy="180" r="4" fill="#c0392b"/>
+    <text x="50" y="185" font-size="10" fill="#c0392b">(0, 2)</text>
+    <circle cx="160" cy="60" r="4" fill="#c0392b"/>
+    <text x="168" y="58" font-size="10" fill="#c0392b">(3, 8)</text>
+    <!-- Marcas en eje x -->
+    <line x1="80" y1="198" x2="80" y2="202" stroke="#333"/><text x="78" y="215" font-size="9">1</text>
+    <line x1="120" y1="198" x2="120" y2="202" stroke="#333"/><text x="118" y="215" font-size="9">2</text>
+    <line x1="160" y1="198" x2="160" y2="202" stroke="#333"/><text x="158" y="215" font-size="9">3</text>
+    <!-- Marcas en eje y -->
+    <line x1="38" y1="180" x2="42" y2="180" stroke="#333"/><text x="25" y="184" font-size="9">2</text>
+    <line x1="38" y1="140" x2="42" y2="140" stroke="#333"/><text x="25" y="144" font-size="9">4</text>
+    <line x1="38" y1="100" x2="42" y2="100" stroke="#333"/><text x="25" y="104" font-size="9">6</text>
+    <line x1="38" y1="60" x2="42" y2="60" stroke="#333"/><text x="25" y="64" font-size="9">8</text>
+  </svg>`,
+
+  histograma: `<svg width="320" height="220" viewBox="0 0 340 240" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+    <line x1="30" y1="200" x2="330" y2="200" stroke="#333" stroke-width="1.5"/>
+    <line x1="30" y1="20" x2="30" y2="200" stroke="#333" stroke-width="1.5"/>
+    <!-- Barras -->
+    <rect x="55" y="120" width="55" height="80" fill="#5d8fcc" stroke="#1a5276" stroke-width="1"/>
+    <text x="82" y="115" text-anchor="middle" font-size="11" font-weight="bold">8</text>
+    <text x="82" y="218" text-anchor="middle" font-size="9">20-25</text>
+    <rect x="125" y="50" width="55" height="150" fill="#5d8fcc" stroke="#1a5276" stroke-width="1"/>
+    <text x="152" y="45" text-anchor="middle" font-size="11" font-weight="bold">15</text>
+    <text x="152" y="218" text-anchor="middle" font-size="9">26-30</text>
+    <rect x="195" y="80" width="55" height="120" fill="#5d8fcc" stroke="#1a5276" stroke-width="1"/>
+    <text x="222" y="75" text-anchor="middle" font-size="11" font-weight="bold">12</text>
+    <text x="222" y="218" text-anchor="middle" font-size="9">31-35</text>
+    <rect x="265" y="150" width="55" height="50" fill="#5d8fcc" stroke="#1a5276" stroke-width="1"/>
+    <text x="292" y="145" text-anchor="middle" font-size="11" font-weight="bold">5</text>
+    <text x="292" y="218" text-anchor="middle" font-size="9">36-40</text>
+    <!-- Marcas eje y -->
+    <line x1="28" y1="180" x2="32" y2="180" stroke="#333"/><text x="20" y="184" text-anchor="end" font-size="9">2</text>
+    <line x1="28" y1="160" x2="32" y2="160" stroke="#333"/><text x="20" y="164" text-anchor="end" font-size="9">4</text>
+    <line x1="28" y1="120" x2="32" y2="120" stroke="#333"/><text x="20" y="124" text-anchor="end" font-size="9">8</text>
+    <line x1="28" y1="80" x2="32" y2="80" stroke="#333"/><text x="20" y="84" text-anchor="end" font-size="9">12</text>
+    <line x1="28" y1="50" x2="32" y2="50" stroke="#333"/><text x="20" y="54" text-anchor="end" font-size="9">15</text>
+    <text x="170" y="235" text-anchor="middle" font-size="10" font-weight="bold">Edad</text>
+    <text x="15" y="115" text-anchor="middle" font-size="10" font-weight="bold" transform="rotate(-90 15 115)">Frec.</text>
+  </svg>`,
+
+  tresRectas: `<svg width="300" height="220" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+    <line x1="40" y1="200" x2="310" y2="200" stroke="#333" stroke-width="1.5"/>
+    <line x1="40" y1="20" x2="40" y2="220" stroke="#333" stroke-width="1.5"/>
+    <text x="305" y="215" font-size="10">km</text>
+    <text x="45" y="18" font-size="10">$</text>
+    <!-- Servicio A: tarifa baja, pendiente alta. Ejemplo: y=20+12x -->
+    <line x1="40" y1="180" x2="240" y2="20" stroke="#c0392b" stroke-width="2.5"/>
+    <text x="245" y="25" font-size="11" font-weight="bold" fill="#c0392b">A</text>
+    <!-- Servicio B: tarifa alta, pendiente baja. Ejemplo: y=120+3x -->
+    <line x1="40" y1="60" x2="300" y2="20" stroke="#1e8449" stroke-width="2.5"/>
+    <text x="305" y="25" font-size="11" font-weight="bold" fill="#1e8449">B</text>
+    <!-- Servicio C: intermedio. Ejemplo: y=70+6x -->
+    <line x1="40" y1="120" x2="280" y2="20" stroke="#7d6608" stroke-width="2.5"/>
+    <text x="285" y="22" font-size="11" font-weight="bold" fill="#7d6608">C</text>
+    <text x="170" y="237" text-anchor="middle" font-size="10" font-weight="bold">Kilómetros recorridos</text>
+    <text x="18" y="115" text-anchor="middle" font-size="10" font-weight="bold" transform="rotate(-90 18 115)">Costo ($)</text>
+  </svg>`
+};
+</script>
+
+<script>
+const BANCO = {
+  PM:{titulo:"Pensamiento Matemático",color:"#1a5276",tiempo:20,texto:null,reactivos:REACTIVOS_PM},
+  RI:{titulo:"Redacción Indirecta",   color:"#7d6608",tiempo:20,texto:null,reactivos:REACTIVOS_RI},
+  CL:{titulo:"Comprensión Lectora",  color:"#1e8449",tiempo:20,texto:TEXTO_CL,reactivos:REACTIVOS_CL},
+};
+
+const STATE={area:null,qIdx:0,answers:{},timerSec:0,timerID:null,results:{}};
+const $=id=>document.getElementById(id);
+const show=id=>$(id).style.display='block';
+const hide=id=>$(id).style.display='none';
+
+function typeset(el){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el]).catch(console.error);}
+
+function fmtT(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function startTimer(){
+  STATE.timerSec=BANCO[STATE.area].tiempo*60;
+  renderTimer();
+  STATE.timerID=setInterval(()=>{STATE.timerSec--;renderTimer();if(STATE.timerSec<=0){clearInterval(STATE.timerID);timeOut();}},1000);
+}
+function renderTimer(){
+  const tb=$('timer-box');tb.textContent=fmtT(STATE.timerSec);
+  tb.className='timer-box'+(STATE.timerSec<=60?' danger':STATE.timerSec<=180?' warn':'');
+}
+function timeOut(){
+  saveResults();
+  hide('screen-exam');
+  $('timeout-msg').innerHTML=`Se agotó el tiempo para <strong>${BANCO[STATE.area].titulo}</strong>.<br>Las preguntas sin responder se contaron como incorrectas.`;
+  show('screen-timeout');
+}
+function afterTimeout(){returnHome();}
+
+function startArea(area){
+  if(STATE.results[area])return;
+  STATE.area=area;STATE.qIdx=0;STATE.answers={};
+  hide('screen-home');
+  const col=BANCO[area].color;
+  document.documentElement.style.setProperty('--area-col',col);
+  $('exam-label').style.background=col;
+  $('exam-label').textContent=BANCO[area].titulo;
+  $('progress-bar').style.background=col;
+
+  const textoWrap=$('texto-toggle-wrap');
+  if(BANCO[area].texto){
+    textoWrap.style.display='block';
+    $('texto-contenido').innerHTML=BANCO[area].texto;
+  } else {
+    textoWrap.style.display='none';
+  }
+
+  buildNavGrid();
+  show('screen-exam');
+  startTimer();
+  renderQuestion();
+}
+
+function toggleTexto(){
+  const toggle=$('texto-toggle');
+  const contenido=$('texto-contenido');
+  const isOpen=contenido.classList.contains('open');
+  contenido.classList.toggle('open',!isOpen);
+  toggle.classList.toggle('open',!isOpen);
+  toggle.querySelector('span:first-child').textContent=isOpen?'📄 Ver texto de lectura':'📄 Ocultar texto de lectura';
+  if(!isOpen) typeset(contenido);
+}
+
+function buildNavGrid(){
+  const grid=$('nav-grid');grid.innerHTML='';
+  const n=BANCO[STATE.area].reactivos.length;
+  for(let i=0;i<n;i++){
+    const btn=document.createElement('button');
+    btn.className='nav-btn';btn.id='nb-'+i;
+    btn.textContent=i+1;
+    btn.onclick=(()=>{const idx=i;return()=>goTo(idx);})();
+    grid.appendChild(btn);
+  }
+  updateNavGrid();
+}
+
+function updateNavGrid(){
+  const n=BANCO[STATE.area].reactivos.length;
+  for(let i=0;i<n;i++){
+    const btn=$('nb-'+i);if(!btn)continue;
+    let cls='nav-btn';
+    if(STATE.answers.hasOwnProperty(i)){
+      cls+=STATE.answers[i]===BANCO[STATE.area].reactivos[i].answer?' answered':' wrong-nav';
+    }
+    if(i===STATE.qIdx) cls+=' current';
+    btn.className=cls;
+  }
+  const answered=Object.keys(STATE.answers).length;
+  const n2=BANCO[STATE.area].reactivos.length;
+  $('progress-bar').style.width=(answered/n2*100)+'%';
+}
+
+function goTo(idx){
+  const n=BANCO[STATE.area].reactivos.length;
+  if(idx<0||idx>=n)return;
+  STATE.qIdx=idx;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const qs=BANCO[STATE.area].reactivos;
+  const q=qs[STATE.qIdx];
+  const n=qs.length;
+
+  $('q-num').textContent=`Pregunta ${STATE.qIdx+1} de ${n}`;
+  $('q-text').innerHTML=q.q;
+
+  // Figura SVG si existe
+  const figEl=$('q-figura');
+  if(q.figura && FIGURAS[q.figura]){
+    figEl.innerHTML=FIGURAS[q.figura];
+    figEl.style.display='block';
+  } else {
+    figEl.innerHTML='';
+    figEl.style.display='none';
+  }
+
+  $('btn-prev').disabled=(STATE.qIdx===0);
+  $('btn-next-nav').disabled=(STATE.qIdx===n-1);
+  $('btn-entregar').style.display=(STATE.qIdx===n-1)?'block':'none';
+
+  const container=$('options');container.innerHTML='';
+  const opts=[{l:'A',t:q.opt_a,k:'a'},{l:'B',t:q.opt_b,k:'b'},{l:'C',t:q.opt_c,k:'c'}];
+  const savedKey=STATE.answers.hasOwnProperty(STATE.qIdx)?STATE.answers[STATE.qIdx]:null;
+  const alreadyAnswered=savedKey!==null;
+
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn';btn.dataset.key=opt.k;
+    btn.innerHTML=`<span class="opt-letter">${opt.l}</span><span>${opt.t}</span>`;
+    if(alreadyAnswered){
+      btn.disabled=true;
+      const correctKey=q.answer;
+      if(savedKey===correctKey){
+        if(opt.k===correctKey) btn.classList.add('correct');
+      } else {
+        if(opt.k===savedKey)   btn.classList.add('wrong');
+        if(opt.k===correctKey) btn.classList.add('correct');
+      }
+    } else {
+      btn.onclick=()=>selectOption(opt.k,btn);
+    }
+    container.appendChild(btn);
+  });
+
+  const exp=$('explanation');
+  if(alreadyAnswered&&q.exp){
+    const isOk=savedKey===q.answer;
+    exp.innerHTML=(isOk?'✅ ':'❌ ')+q.exp;
+    exp.className='explanation show'+(isOk?'':' fail');
+  } else {
+    exp.className='explanation';exp.innerHTML='';
+  }
+
+  updateNavGrid();
+  typeset($('screen-exam'));
+}
+
+function selectOption(key,clickedBtn){
+  const q=BANCO[STATE.area].reactivos[STATE.qIdx];
+  STATE.answers[STATE.qIdx]=key;
+  const isOk=key===q.answer;
+  document.querySelectorAll('.opt-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.key===q.answer) b.classList.add('correct');
+    if(b===clickedBtn&&!isOk)    b.classList.add('wrong');
+  });
+  const exp=$('explanation');
+  exp.innerHTML=(isOk?'✅ ':'❌ ')+q.exp;
+  exp.className='explanation show'+(isOk?'':' fail');
+  updateNavGrid();
+  typeset(exp);
+}
+
+function pedirConfirmar(){
+  const n=BANCO[STATE.area].reactivos.length;
+  const pendientes=n-Object.keys(STATE.answers).length;
+  $('modal-msg').innerHTML=pendientes>0
+    ?`Tienes <strong>${pendientes}</strong> pregunta(s) sin responder. Puedes regresar a contestarlas o entregar ahora.`
+    :'Has respondido todas las preguntas. ¿Deseas entregar esta área?';
+  $('modal-bg').classList.add('open');
+}
+function cerrarModal(){$('modal-bg').classList.remove('open');}
+function confirmarEntrega(){
+  cerrarModal();
+  clearInterval(STATE.timerID);
+  saveResults();
+  hide('screen-exam');
+  // Marcar área como completada
+  $('btn-'+STATE.area).classList.add('done');
+  $('btn-'+STATE.area).disabled=true;
+  // Verificar si todas las áreas están completas
+  const allDone=Object.keys(BANCO).every(a=>STATE.results[a]);
+  if(allDone){
+    $('btn-go-results').classList.add('show');
+  }
+  show('screen-home');
+}
+
+function saveResults(){
+  const qs=BANCO[STATE.area].reactivos;
+  let correct=0,wrong=0,skip=0;
+  qs.forEach((q,i)=>{
+    if(!STATE.answers.hasOwnProperty(i)) skip++;
+    else if(STATE.answers[i]===q.answer) correct++;
+    else wrong++;
+  });
+  STATE.results[STATE.area]={correct,wrong,skip,total:qs.length,answers:{...STATE.answers}};
+}
+
+function showResults(){
+  hide('screen-home');
+  // Score grid
+  const grid=$('score-grid');grid.innerHTML='';
+  let totalC=0,totalW=0,totalS=0,totalQ=0;
+  Object.keys(BANCO).forEach(area=>{
+    const r=STATE.results[area]||{correct:0,wrong:0,skip:0,total:BANCO[area].reactivos.length};
+    totalC+=r.correct;totalW+=r.wrong;totalS+=r.skip;totalQ+=r.total;
+    const pct=Math.round(r.correct/r.total*100);
+    const col=BANCO[area].color;
+    grid.innerHTML+=`<div class="score-card" style="background:${col}">
+      <div class="sc-label">${BANCO[area].titulo.split(' ').slice(0,2).join(' ')}</div>
+      <div class="sc-val">${r.correct}/${r.total}</div>
+      <div class="sc-sub">${pct}% correcto</div>
+    </div>`;
+  });
+  const totalPct=Math.round(totalC/totalQ*100);
+  grid.innerHTML+=`<div class="score-card" style="background:#2e4057;grid-column:1/-1">
+    <div class="sc-label">TOTAL SIMULACRO</div>
+    <div class="sc-val">${totalC}/${totalQ}</div>
+    <div class="sc-sub">${totalPct}% correcto</div>
+  </div>`;
+
+  // Chart
+  const chart=$('chart');chart.innerHTML='';
+  Object.keys(BANCO).forEach(area=>{
+    const r=STATE.results[area]||{correct:0,total:BANCO[area].reactivos.length};
+    const pct=Math.round(r.correct/r.total*100);
+    const col=BANCO[area].color;
+    chart.innerHTML+=`<div class="bar-row">
+      <div class="bar-label" style="color:${col}">${area}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${col}">${pct}%</div>
+      </div>
+      <div class="bar-pct" style="color:${col}">${r.correct||0}/${r.total}</div>
+    </div>`;
+  });
+
+  // Review
+  const rev=$('review-list');rev.innerHTML='';
+  Object.keys(BANCO).forEach(area=>{
+    const r=STATE.results[area];
+    const col=BANCO[area].color;
+    rev.innerHTML+=`<div class="rev-area-hdr" style="color:${col}">${BANCO[area].titulo}</div>`;
+    const qs=BANCO[area].reactivos;
+    const answers=r?r.answers:{};
+    qs.forEach((q,i)=>{
+      const given=answers[i];
+      let status='skip',badge='Sin responder';
+      if(given){
+        status=given===q.answer?'ok':'fail';
+        badge=given===q.answer?'Correcta':'Incorrecta';
+      }
+      const optMap={a:q.opt_a,b:q.opt_b,c:q.opt_c};
+      rev.innerHTML+=`<div class="rev-item">
+        <div class="rev-header">
+          <span class="rev-badge ${status}">${badge}</span>
+          <span class="rev-num">Preg. ${i+1}</span>
+        </div>
+        <div class="rev-q">${q.q}</div>
+        ${given?`<div class="rev-ans">Tu respuesta: ${given.toUpperCase()}) ${optMap[given]||''}</div>`:''}
+        ${given!==q.answer?`<div class="rev-ans" style="color:#27ae60">Correcta: ${q.answer.toUpperCase()}) ${optMap[q.answer]||''}</div>`:''}
+        ${q.exp?`<div class="rev-exp">💡 ${q.exp}</div>`:''}
+      </div>`;
+    });
+  });
+
+  show('screen-results');
+  typeset($('screen-results'));
+}
+
+function returnHome(){
+  clearInterval(STATE.timerID);
+  saveResults();
+  $('btn-'+STATE.area).classList.add('done');
+  $('btn-'+STATE.area).disabled=true;
+  const allDone=Object.keys(BANCO).every(a=>STATE.results[a]);
+  if(allDone) $('btn-go-results').classList.add('show');
+  hide('screen-timeout');
+  show('screen-home');
+}
+
+function goHome(){
+  hide('screen-results');
+  // Reset todo
+  Object.keys(STATE.results).length=0;
+  STATE.area=null;STATE.qIdx=0;STATE.answers={};
+  Object.keys(BANCO).forEach(a=>{
+    const btn=$('btn-'+a);
+    if(btn){btn.classList.remove('done');btn.disabled=false;}
+  });
+  $('btn-go-results').classList.remove('show');
+  show('screen-home');
+}
+</script>
+</body>
+</html>
